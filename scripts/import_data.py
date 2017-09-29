@@ -22,24 +22,10 @@ def get_df(path):
     return pd.DataFrame.from_dict(df, orient='index')
 
 
-def insert_item_metadata(meta_collection, meta_path):
-    item_meta_data = []
-
-    for item_meta in parse(meta_path):
-        item_meta_data.append(item_meta)
-        meta_collection.insert_many(item_meta_data)
-        item_meta_data = []
-
-    if not meta_collection:
-        meta_collection.insert_many(item_meta_data)
-
-    meta_collection.create_index([('asin', pymongo.ASCENDING)])
-
-
-def insert_item_review(review_collection, review_path):
+def insert_item(collection_name, data_path):
     item_reviews = []
 
-    for review in parse(review_path):
+    for review in parse(data_path):
         if 'unixReviewTime' in review.keys():
                 if len(item_reviews) < 1000:
                     item_reviews.append(review)
