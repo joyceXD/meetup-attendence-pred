@@ -1,5 +1,12 @@
 import json
 import pandas as pd
+import re
+
+
+def clean_html(raw_html):
+    cleanr = re.compile('<.*?>')
+    clean_text = re.sub(cleanr, '', raw_html)
+    return clean_text
 
 
 def flatten_dict(df, col):
