@@ -1,5 +1,4 @@
 import math
-import subprocess
 
 
 UNIX_4_WEEKS = 2419200000
@@ -19,11 +18,6 @@ def count_past_user_events(df, user_id, event_id):
     user_id = event.user_id.values[0]
     past_events = df[(df.e_time > (event_time - UNIX_4_WEEKS)) & (df.e_time < event_time) & (df.user_id==user_id)]
     return past_events.shape[0]
-
-
-def event_hour_transform(h_value):
-    value = math.cos(2*math.pi*(h_value-6)/24)
-    return value
 
 
 def label_attendance(attend):
