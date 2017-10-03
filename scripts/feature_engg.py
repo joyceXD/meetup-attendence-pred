@@ -1,6 +1,26 @@
 import math
 import subprocess
 
+
+UNIX_4_WEEKS = 2419200000
+
+
+def count_past_group_events(df, event_id):
+    event = df[df.e_event_id == event_id]
+    event_time = int(event.e_time)
+    group_id = event.e_group_id.values[0]
+    past_events = df[(df.e_time > (event_time - UNIX_4_WEEKS)) & (df.e_time < event_time) & (df.e_group_id==group_id)]
+    return past_events.shape[0]
+
+
+def count_past_user_events(df, user_id, event_id):
+    event = df[(df.user_id == user_id) & (df.e_event_id == event_id)]
+    event_time = int(event.e_time)
+    user_id = event.user_id.values[0]
+    past_events = df[(df.e_time > (event_time - UNIX_4_WEEKS)) & (df.e_time < event_time) & (df.user_id==user_id)]
+    return past_events.shape[0]
+
+
 def event_hour_transform(h_value):
     value = math.cos(2*math.pi*(h_value-6)/24)
     return value
@@ -11,30 +31,3 @@ def label_attendance(attend):
         return 1
     else:
         return 0
-
-
-def lat_lon_similarity(lat1, lon1, lat2, lon2):
-    lat_diff = lat1-lat2
-    lon_diff = lon1-lon2
-    sim = (lat_diff**2+lon_diff**2)**(0.5)
-    return sim
-
-
-def visualize_tree(clf, feature_names):
-    """Create tree png using graphviz.
-
-    Args
-    ----
-    tree -- scikit-learn DecsisionTree.
-    feature_names -- list of feature names.
-    """
-    with open("dt.dot", 'w') as f:
-        tree.export_graphviz(clf, out_file=f,
-                        feature_names=feature_names)
-
-    command = ["dot", "-Tpng", "dt.dot", "-o", "./dt.png"]
-    try:
-        subprocess.check_call(command)
-    except:
-        exit("Could not run dot, ie graphviz, to "
-             "produce visualization")
