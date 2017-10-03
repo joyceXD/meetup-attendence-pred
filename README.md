@@ -1,4 +1,5 @@
-## Meetup attendance prediction
+# meetup-attendence-pred
+Given meetup data, develop a model for meetup event attendance prediction.
 
 #### Required library and versions
 
